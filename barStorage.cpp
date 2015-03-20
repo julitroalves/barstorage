@@ -1,14 +1,37 @@
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <sys/stat.h>
 
 using namespace std;
 
-void setup();
+struct Establishment {
+	int id;
+	string nome;
+} bar;
+
+struct Product {
+	int id;
+	string nome;
+} cerveja;
+
+struct Price {
+	int id;
+	string nome;
+} oferta;
+
+bool setup();
+int createEstablishment(Establishment bar);
+int createProduct(Product cerveja);
+int createPrice(Price oferta);
 
 int main() {
-	
 	// Inicializa todas as variaveis do sistema.
-	setup();
+	if (!setup()) {
+		cout << "Failed to bootstrap system";
+
+		return 0;
+	}
 	
 	int entry = 0;
 	do {
@@ -21,19 +44,22 @@ int main() {
 		cout << "2 - Cadastrar Cervejas" << endl;
 		
 		cout << "3 - Cadastrar Ofertas" << endl;
-		
-		switch(entry) {
-			case 1: cout << "Bar cadastrado!" << endl;
+
+		switch (entry) {
+			case 1:
+				createEstablishment(bar);
 			break;
 			
-			case 2: cout << "Cerveja cadastrada!" << endl;
+			case 2:
+				createProduct(cerveja);
 			break;
 			
-			case 3: cout << "Oferta cadastrada!" << endl;
+			case 3:
+				createPrice(oferta);
 			break;
 		}
 		
-		// item do menu
+		// Item do menu.
 		cin >> entry;
 	}
 	while(entry);
@@ -41,15 +67,48 @@ int main() {
 	return 0;
 }
 
-void setup() {
-	ofstream baresStorage ("bares.txt");
-	ofstream cervejasStorage ("cervejas.txt");
-	ofstream ofertasStorage ("ofertas.txt");
+/**
+ * Setup function
+ * Usada para setar as principais variáveis do sistema.
+ *
+ * @return void
+ */ 
+bool setup() {
+	// Cria pasta.
+	char storageFolder[] = "Storage";
+	const int dir_err = mkdir(storageFolder, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+	if (-1 == dir_err) {
+		cout << "Error creating directory!" << endl;
+
+		return false;
+	}
+
+	ofstream baresStorage ("Storage/bares.txt");
+	ofstream cervejasStorage ("Storage/cervejas.txt");
+	ofstream ofertasStorage ("Storage/ofertas.txt");
+
+	return true;
+}
+
+
+/**
+ * CRUD functions
+ */
+int createEstablishment(Establishment bar) {
+	cout << "Bar cadastrado!" << endl;
+
+	return 0;
+}
+
+int createProduct(Product cerveja) {
+	cout << "Cerveja cadastrada!" << endl;
 	
-	//if (myfile.is_open()) {
-	//	myfile << "\n";
-	//	myfile << "This is another line.\n";
-	//	myfile.close();
-	//}
-	//else cout << "Unable to open file";
+	return 0;
+}
+
+int createPrice(Price oferta) {
+	cout << "Oferta cadastrada!" << endl;
+
+	return 0;
 }
